@@ -4,7 +4,7 @@ import Card from "../UI/Card";
 
 import styles from './AddUser.module.css'
 
-const AddUser = () => {
+const AddUser = (props) => {
 
     const [enteredUsername, setEnteredUsername] = useState('')
     const [enteredAge, setEnteredAge] = useState('')
@@ -15,9 +15,9 @@ const AddUser = () => {
             return;
         }
         if (+enteredAge < 1) {
-            return;
+            return; 
         }
-        console.log(enteredUsername, enteredAge)
+        props.onAddUsers(enteredUsername, enteredAge)
         setEnteredAge('')
         setEnteredUsername('')
     }
