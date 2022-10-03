@@ -7,8 +7,7 @@ import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+
   const [error, setError] = useState();
 
   const inputNameRef = useRef();
@@ -35,16 +34,6 @@ const AddUser = (props) => {
       return;
     }
     props.onAddUser(enteredInputName, enteredInputAge);
-    setEnteredUsername('');
-    setEnteredAge('');
-  };
-
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
   };
 
   const errorHandler = () => {
