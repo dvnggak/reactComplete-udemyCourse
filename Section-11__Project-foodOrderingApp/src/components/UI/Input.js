@@ -7,7 +7,7 @@ const Input = (props) => {
             <label htmlFor={props.input.id}>
                 {props.label}
             </label>
-            <input />
+            <input {...props.input}/>
         </div>
     )
 }
