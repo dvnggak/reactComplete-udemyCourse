@@ -5,10 +5,13 @@ import CartItem from './CartItem';
 import classes from './Cart.module.css';
 import CartContext from '../../store/cart-context';
 import Checkout from './Checkout';
+import React from 'react';
 
 const Cart = (props) => {
 
   const [isCheckout, setIsCheckout] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [hasSubmit, setHasSubmit] = useState(false)
 
   const cartCtx = useContext(CartContext);
 
@@ -27,14 +30,17 @@ const Cart = (props) => {
     setIsCheckout(true)
   ]
 
-  const submitOrderHandler = (userData) => {
-    fetch('https://react-http-92073-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json',{
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true)
+    await fetch('https://react-http-92073-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json',{
       method: 'POST',
       body: JSON.stringify({
         user: userData,
         orderedItems: cartCtx.items,
       })
     })
+    setIsSubmitting(false)
+    setHasSubmit(true)
   }
 
   const cartItems = (
@@ -62,9 +68,8 @@ const Cart = (props) => {
     </div>
   );
 
-
-  return (
-    <Modal onClose={props.onClose}>
+  const cartModalContent = (
+    <React.Fragment>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
@@ -72,6 +77,29 @@ const Cart = (props) => {
       </div>
       {isCheckout && <Checkout onConfirm={submitOrderHandler} onClose={props.onClose}/>}
       {!isCheckout && modalActions}
+    </React.Fragment>
+  )
+
+    const isSubmittingModalContent = (
+      <p>Sending order data ...</p>
+    )
+
+    const hasSubmitModalContent = (
+      <React.Fragment>
+        <p>Successfully sent the order !</p>
+        <div className={classes.actions}>
+          <button className={classes.button} onClick={props.onClose}>
+            Close
+          </button>
+        </div>
+      </React.Fragment>
+    )
+
+  return (
+    <Modal onClose={props.onClose}>
+      {!isSubmitting && !hasSubmit ? cartModalContent : null}
+      {isSubmitting ? isSubmittingModalContent : null}
+      {!isSubmitting && hasSubmit ? hasSubmitModalContent : null}
     </Modal>
   );
 };
