@@ -23,12 +23,12 @@ const NewCommentForm = (props) => {
     // optional: Could validate here
     const enteredText = commentTextRef.current.value;
     // send comment to server
-    sendRequest(
-      {
+    sendRequest({
+      commentData: {
         text: enteredText,
       },
-      props.quoteId
-    );
+      quoteId: props.quoteId,
+    });
   };
 
   return (
