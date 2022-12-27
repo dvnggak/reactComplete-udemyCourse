@@ -22,32 +22,43 @@ const AuthForm = () => {
 
     setIsLoading(true);
 
+    let URL;
     if (isLogin) {
+      URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
     } else {
-      fetch(API_KEY, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-type": "application/json",
-        },
-      }).then((res) => {
+      URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
+    }
+    fetch(URL, {
+      method: "POST",
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => {
         setIsLoading(false);
         if (res.ok) {
+          return res.json();
         } else {
           return res.json().then((data) => {
             let errorMessage = "Authentication Failed";
             // if (data && data.error && data.error.message) {
             //   errorMessage = data.error.message;
             // }
-            alert(errorMessage);
+            throw new Error(errorMessage);
           });
         }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        alert(err.message);
       });
-    }
   };
 
   return (
@@ -71,7 +82,7 @@ const AuthForm = () => {
           {!isLoading ? (
             <button>{isLogin ? "Login" : "Create Account"}</button>
           ) : (
-            <p>Sending Request ...</p>
+            <p>Sending Request ... </p>
           )}
           <button
             type="button"
