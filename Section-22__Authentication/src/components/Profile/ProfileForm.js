@@ -1,4 +1,5 @@
 import { useContext, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 import classes from "./ProfileForm.module.css";
 
@@ -6,6 +7,7 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 const ProfileForm = () => {
   const newPasswordRef = useRef();
+  const history = useHistory();
 
   const authCtx = useContext(AuthContext);
 
@@ -31,6 +33,7 @@ const ProfileForm = () => {
       }
     ).then((res) => {
       // Assuming always succeed
+      history.replace("/");
     });
   };
   return (
